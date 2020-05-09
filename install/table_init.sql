@@ -32,3 +32,9 @@ CREATE TABLE company(
 	company_web_address VARCHAR(32),
 	company_industry VARCHAR(32)
 );
+CREATE TABLE question(
+	questionID INT PRIMARY KEY,
+	question_text TEXT,
+	question_type VARCHAR(16),
+	correct_answer VARCHAR(16)
+);
