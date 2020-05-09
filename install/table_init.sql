@@ -38,3 +38,7 @@ CREATE TABLE question(
 	question_type VARCHAR(16),
 	correct_answer VARCHAR(16)
 );
+CREATE TABLE choice_options(
+	choiceID INT PRIMARY KEY,
+	content TEXT
+);
