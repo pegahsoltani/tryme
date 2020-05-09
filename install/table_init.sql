@@ -42,3 +42,8 @@ CREATE TABLE choice_options(
 	choiceID INT PRIMARY KEY,
 	content TEXT
 );
+CREATE TABLE quiz(
+	quizID INT PRIMARY KEY,
+	max_time_const INT,
+	quiz_name VARCHAR(32)
+);
