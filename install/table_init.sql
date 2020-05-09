@@ -47,3 +47,9 @@ CREATE TABLE quiz(
 	max_time_const INT,
 	quiz_name VARCHAR(32)
 );
+CREATE TABLE trial(
+	trialID INT PRIMARY KEY,
+	start_date_time DATETIME,
+	end_date_time DATETIME,
+	answer VARCHAR(32)
+);
