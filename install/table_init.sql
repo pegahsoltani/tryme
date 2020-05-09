@@ -6,3 +6,7 @@ CREATE TABLE user(
 	surname VARCHAR(32),
 	email VARCHAR(32)
 );
+CREATE TABLE admin(
+	adminID int PRIMARY KEY,
+	FOREIGN KEY (adminID) REFERENCES user(userID)
+);
