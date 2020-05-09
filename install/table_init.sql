@@ -20,3 +20,15 @@ CREATE TABLE candidate(
 	min_req_salary INT,
 	FOREIGN KEY (candidateID) REFERENCES user(userID)
 );
+CREATE TABLE representative(
+	representativeID INT PRIMARY KEY,
+	position VARCHAR(32),
+	FOREIGN KEY (representativeID) REFERENCES user(userID)
+);
+CREATE TABLE company(
+	companyID INT PRIMARY KEY,
+	company_name VARCHAR(32),
+	company_address VARCHAR(32),
+	company_web_address VARCHAR(32),
+	company_industry VARCHAR(32)
+);
