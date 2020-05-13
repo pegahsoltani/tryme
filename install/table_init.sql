@@ -82,3 +82,11 @@ CREATE TABLE answers(
 	answer TEXT,
 	PRIMARY KEY (candidateID, questionID)
 );
+CREATE TABLE it_contains(
+	quizID INT,
+	questionID INT,
+	choiceID INT,
+	is_correct BOOL,
+	question_order INT,
+	PRIMARY KEY (choiceID, questionID, quizID)
+);
