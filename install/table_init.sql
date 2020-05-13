@@ -52,7 +52,9 @@ CREATE TABLE trial(
 	trialID INT PRIMARY KEY,
 	start_date_time DATETIME,
 	end_date_time DATETIME,
-	answer VARCHAR(32)
+	answer VARCHAR(32),
+	quizID INT,
+	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
 );
 CREATE TABLE recommends(
 	companyID INT,
