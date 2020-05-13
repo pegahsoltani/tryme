@@ -37,6 +37,7 @@ CREATE TABLE question(
 	question_text TEXT,
 	question_type VARCHAR(16),
 	correct_answer VARCHAR(16),
+	adminID INT,
 	FOREIGN KEY (adminID) REFERENCES admin (adminID)
 );
 CREATE TABLE choice_options(
@@ -78,6 +79,10 @@ CREATE TABLE admin_edits_quiz(
 	FOREIGN KEY (adminID) REFERENCES admin (adminID),
 	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
 );
+CREATE TABLE subject_field(
+    subjectID INT PRIMARY KEY,
+    subject_name VARCHAR(16)
+);
 CREATE TABLE question_has_subject_field(
 	subjectID INT,
 	questionID INT,
@@ -85,6 +90,7 @@ CREATE TABLE question_has_subject_field(
 	FOREIGN KEY (subjectID) REFERENCES subject_field (subjectID),
 	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
+
 CREATE TABLE candidate_answers_question(
 	candidateID INT,
 	questionID INT,
