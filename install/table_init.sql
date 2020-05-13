@@ -56,13 +56,13 @@ CREATE TABLE trial(
 	quizID INT,
 	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
 );
-CREATE TABLE recommends(
+CREATE TABLE company_recommends_candidate(
 	companyID INT,
 	candidateID INT,
 	recom_letter BLOB,
 	PRIMARY KEY (companyID, candidateID)
 );
-CREATE TABLE sends_request(
+CREATE TABLE representative_sends_request_to_candidate(
 	candidateID INT,
 	representativeID INT,
 	content VARCHAR(32),
@@ -71,7 +71,7 @@ CREATE TABLE sends_request(
 	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID),
 	FOREIGN KEY (representativeID) REFERENCES representative (representativeID)
 );
-CREATE TABLE edits(
+CREATE TABLE admin_edits_quiz(
 	adminID INT,
 	quizID INT,
 	PRIMARY KEY (adminID, quizID),
@@ -85,13 +85,15 @@ CREATE TABLE question_has_subject_field(
 	FOREIGN KEY (subjectID) REFERENCES subject_field (subjectID),
 	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
-CREATE TABLE answers(
+CREATE TABLE candidate_answers_question(
 	candidateID INT,
 	questionID INT,
 	answer TEXT,
-	PRIMARY KEY (candidateID, questionID)
+	PRIMARY KEY (candidateID, questionID),
+	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID),
+	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
-CREATE TABLE it_contains(
+CREATE TABLE quiz_contains_choice_options_and_questions(
 	quizID INT,
 	questionID INT,
 	choiceID INT,
