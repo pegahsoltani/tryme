@@ -59,3 +59,10 @@ CREATE TABLE recommends(
 	recom_letter BLOB,
 	PRIMARY KEY (companyID, candidateID)
 );
+CREATE TABLE sends_request(
+	candidateID INT,
+	representativeID INT,
+	content VARCHAR(32),
+	status VARCHAR(16),
+	PRIMARY KEY (candidateID, representativeID)
+);
