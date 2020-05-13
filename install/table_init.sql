@@ -71,3 +71,8 @@ CREATE TABLE edits(
 	quizID INT,
 	PRIMARY KEY (adminID, quizID)
 );
+CREATE TABLE has(
+	subjectID INT,
+	questionID INT,
+	PRIMARY KEY (subjectID, questionID)
+);
