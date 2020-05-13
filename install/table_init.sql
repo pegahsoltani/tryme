@@ -76,3 +76,9 @@ CREATE TABLE has(
 	questionID INT,
 	PRIMARY KEY (subjectID, questionID)
 );
+CREATE TABLE answers(
+	candidateID INT,
+	questionID INT,
+	answer TEXT,
+	PRIMARY KEY (candidateID, questionID)
+);
