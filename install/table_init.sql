@@ -78,10 +78,12 @@ CREATE TABLE edits(
 	FOREIGN KEY (adminID) REFERENCES admin (adminID),
 	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
 );
-CREATE TABLE has(
+CREATE TABLE question_has_subject_field(
 	subjectID INT,
 	questionID INT,
-	PRIMARY KEY (subjectID, questionID)
+	PRIMARY KEY (subjectID, questionID),
+	FOREIGN KEY (subjectID) REFERENCES subject_field (subjectID),
+	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
 CREATE TABLE answers(
 	candidateID INT,
