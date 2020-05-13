@@ -67,7 +67,9 @@ CREATE TABLE sends_request(
 	representativeID INT,
 	content VARCHAR(32),
 	status VARCHAR(16),
-	PRIMARY KEY (candidateID, representativeID)
+	PRIMARY KEY (candidateID, representativeID),
+	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID),
+	FOREIGN KEY (representativeID) REFERENCES representative (representativeID)
 );
 CREATE TABLE edits(
 	adminID INT,
