@@ -1,10 +1,10 @@
 CREATE TABLE user(
 	userID INT PRIMARY KEY,
-	username VARCHAR(32),
-	password VARCHAR(16),
-	name VARCHAR(32),
-	surname VARCHAR(32),
-	email VARCHAR(32)
+	username VARCHAR(32) NOT NULL,
+	password VARCHAR(16) NOT NULL,
+	name VARCHAR(32) NOT NULL,
+	surname VARCHAR(32) NOT NULL,
+	email VARCHAR(32) NOT NULL
 );
 CREATE TABLE admin(
 	adminID int PRIMARY KEY,
