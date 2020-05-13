@@ -66,3 +66,8 @@ CREATE TABLE sends_request(
 	status VARCHAR(16),
 	PRIMARY KEY (candidateID, representativeID)
 );
+CREATE TABLE edits(
+	adminID INT,
+	quizID INT,
+	PRIMARY KEY (adminID, quizID)
+);
