@@ -36,7 +36,8 @@ CREATE TABLE question(
 	questionID INT PRIMARY KEY,
 	question_text TEXT,
 	question_type VARCHAR(16),
-	correct_answer VARCHAR(16)
+	correct_answer VARCHAR(16),
+	FOREIGN KEY (adminID) REFERENCES admin (adminID)
 );
 CREATE TABLE choice_options(
 	choiceID INT PRIMARY KEY,
