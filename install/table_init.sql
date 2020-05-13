@@ -53,3 +53,9 @@ CREATE TABLE trial(
 	end_date_time DATETIME,
 	answer VARCHAR(32)
 );
+CREATE TABLE recommends(
+	companyID INT,
+	candidateID INT,
+	recom_letter BLOB,
+	PRIMARY KEY (companyID, candidateID)
+);
