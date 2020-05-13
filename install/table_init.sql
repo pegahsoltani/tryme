@@ -99,5 +99,7 @@ CREATE TABLE quiz_contains_choice_options_and_questions(
 	choiceID INT,
 	is_correct BOOL,
 	question_order INT,
-	PRIMARY KEY (choiceID, questionID, quizID)
+	PRIMARY KEY (choiceID, questionID, quizID),
+	FOREIGN KEY (quizID) REFERENCES quiz (quizID),
+	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
