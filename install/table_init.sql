@@ -74,7 +74,9 @@ CREATE TABLE sends_request(
 CREATE TABLE edits(
 	adminID INT,
 	quizID INT,
-	PRIMARY KEY (adminID, quizID)
+	PRIMARY KEY (adminID, quizID),
+	FOREIGN KEY (adminID) REFERENCES admin (adminID),
+	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
 );
 CREATE TABLE has(
 	subjectID INT,
