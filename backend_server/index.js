@@ -67,11 +67,40 @@ app.post('/candidate_signup', function (req, res) { // post for server function
     }); // sending the quesries to the database
 });
 // sign up as representative
+app.post('/representative_signup', function (req, res) { // post for server function
+    const user_query_string = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?);";
+    const candidate_query_string = "INSERT INTO representative VALUES(?, ?)";
+    con.query(
+        user_query_string,
+        [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
+        function (err, result) {
+            if (err) throw err;
+            con.query(
+                candidate_query_string,
+                [req.body.userID, req.body.position],
+                function (err, result){
+                    if (err) throw err;
+                    res.send();
+                }
+            );
+            // console.log("Result: " + result); // shows the message on terminal
+        }); // sending the quesries to the database
+});
 // sign up as admin
 
 // sign in functions
+// for candidate
 app.post('/candidate_signin', function(req, res){
     const candidate_signin = "SELECT * FROM user u INNER JOIN candidate c ON u.userID = c.candidateID WHERE u.username = ? AND u.password = ?";
+    con.query(candidate_signin,[req.body.username, req.body.password], function (err, result) {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+
+// signin for representative
+app.post('/representative_signin', function(req, res){
+    const candidate_signin = "SELECT * FROM user u INNER JOIN representative c ON u.userID = c.candidateID WHERE u.username = ? AND u.password = ?";
     con.query(candidate_signin,[req.body.username, req.body.password], function (err, result) {
         if (err) throw err;
         res.send(result);
