@@ -69,6 +69,16 @@ app.post('/candidate_signup', function (req, res) { // post for server function
 // sign up as representative
 // sign up as admin
 
+// sign in functions
+app.post('/candidate_signin', function(req, res){
+    const candidate_signin = "SELECT * FROM user u INNER JOIN candidate c ON u.userID = c.candidateID WHERE u.username = ? AND u.password = ?";
+    con.query(candidate_signin,[req.body.username, req.body.password], function (err, result) {
+        if (err) throw err;
+        res.send(result);
+    });
+});
+
+
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {
     console.log('Start tryme!');
