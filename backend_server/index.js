@@ -87,7 +87,25 @@ app.post('/representative_signup', function (req, res) { // post for server func
         }); // sending the quesries to the database
 });
 // sign up as admin
-
+app.post('/admin_signup', function (req, res) { // post for server function
+    const user_query_string = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?);";
+    const candidate_query_string = "INSERT INTO admin VALUES(?)";
+    con.query(
+        user_query_string,
+        [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
+        function (err, result) {
+            if (err) throw err;
+            con.query(
+                candidate_query_string,
+                [req.body.userID],
+                function (err, result){
+                    if (err) throw err;
+                    res.send();
+                }
+            );
+            // console.log("Result: " + result); // shows the message on terminal
+        }); // sending the quesries to the database
+});
 // sign in functions
 // for candidate
 app.post('/candidate_signin', function(req, res){
@@ -106,7 +124,14 @@ app.post('/representative_signin', function(req, res){
         res.send(result);
     });
 });
-
+// signin for admin
+app.post('/admin_signin', function(req, res){
+    const admin_signin = "SELECT * FROM user u INNER JOIN admin a ON u.userID = a.adminID WHERE u.username = ? AND u.password = ?";
+    con.query(admin_signin,[req.body.username, req.body.password], function (err, result) {
+        if (err) throw err;
+        res.send(result);
+    });
+});
 
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {
