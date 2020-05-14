@@ -100,7 +100,7 @@ app.post('/candidate_signin', function(req, res){
 
 // signin for representative
 app.post('/representative_signin', function(req, res){
-    const candidate_signin = "SELECT * FROM user u INNER JOIN representative c ON u.userID = c.candidateID WHERE u.username = ? AND u.password = ?";
+    const candidate_signin = "SELECT * FROM user u INNER JOIN representative r ON u.userID = r.representativeID WHERE u.username = ? AND u.password = ?";
     con.query(candidate_signin,[req.body.username, req.body.password], function (err, result) {
         if (err) throw err;
         res.send(result);
