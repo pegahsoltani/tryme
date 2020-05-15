@@ -66,6 +66,22 @@ app.post('/candidate_signup', function (req, res) { // post for server function
         // console.log("Result: " + result); // shows the message on terminal
     }); // sending the quesries to the database
 });
+
+// additional requirement, recommendatation
+app.post('/recom_list', function (req, res) { // post for server function
+    const recom_list_string = "SELECT c.company_name, r.recom_letter FROM company c INNER JOIN company_recommends_candidate r ON r.companyID = c.companyID WHERE r.candidateID = ?;";
+    con.query(
+        recom_list_string,
+        [req.body.candidateID],
+        function (err, result) {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            res.send(result);
+            // console.log("Result: " + result); // shows the message on terminal
+        }); // sending the quesries to the database
+});
 // sign up as representative
 app.post('/representative_signup', function (req, res) { // post for server function
     const user_query_string = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?);";
@@ -79,7 +95,10 @@ app.post('/representative_signup', function (req, res) { // post for server func
                 candidate_query_string,
                 [req.body.userID, req.body.position],
                 function (err, result){
-                    if (err) throw err;
+                    if (err) {
+                        res.status(500).send(err);
+                        return;
+                    }
                     res.send();
                 }
             );
