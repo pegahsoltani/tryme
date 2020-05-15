@@ -61,7 +61,9 @@ CREATE TABLE company_recommends_candidate(
 	companyID INT,
 	candidateID INT,
 	recom_letter BLOB,
-	PRIMARY KEY (companyID, candidateID)
+	PRIMARY KEY (companyID, candidateID),
+	FOREIGN KEY (companyID) REFERENCES company (companyID),
+	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID)
 );
 CREATE TABLE representative_sends_request_to_candidate(
 	candidateID INT,
