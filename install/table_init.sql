@@ -50,12 +50,14 @@ CREATE TABLE quiz(
 	quiz_name VARCHAR(32)
 );
 CREATE TABLE trial(
+    candidateID INT,
 	trialID INT PRIMARY KEY,
 	start_date_time DATETIME,
 	end_date_time DATETIME,
 	answer VARCHAR(32),
 	quizID INT,
-	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
+	FOREIGN KEY (quizID) REFERENCES quiz (quizID),
+	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID)
 );
 CREATE TABLE company_recommends_candidate(
 	companyID INT,
@@ -95,11 +97,13 @@ CREATE TABLE question_has_subject_field(
 
 CREATE TABLE candidate_answers_question(
 	candidateID INT,
+	trialID INT,
 	questionID INT,
 	answer TEXT,
-	PRIMARY KEY (candidateID, questionID),
+	PRIMARY KEY (candidateID, questionID, trialID),
 	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID),
-	FOREIGN KEY (questionID) REFERENCES question (questionID)
+	FOREIGN KEY (questionID) REFERENCES question (questionID),
+	FOREIGN KEY (trialID) REFERENCES trial (trialID)
 );
 CREATE TABLE quiz_contains_choice_options_and_questions(
 	quizID INT,

@@ -161,6 +161,13 @@ app.post('/admin_signin', function(req, res){
 * Company representatives can list all quizzes and see results of developers taking
 the quiz.
 * */
+app.get('/list_quizzes_candidates_results', function(req, res){
+    const list_quizzes_candidates_results = "SELECT u.name , q.quiz_name , total_score, t.trialID FROM user u INNER JOIN candidate c INNER JOIN quiz q INNER JOIN trial t INNER JOIN (SELECT caq.candidateID , caq.trialID , sum(caq.answer = qn.correct_answer) as total_score FROM candidate_answers_question caq INNER JOIN question qn ON caq.questionID = qn.questionID GROUP BY caq.candidateID , caq.trialID) as total_score_table ON u.userID = c.candidateID AND t.quizID = q.quizID AND c.candidateID = t.candidateID AND total_score_table.trialID = t.trialID AND total_score_table.candidateID = c.candidateID;";
+    con.query(list_quizzes_candidates_results, function (err, result) {
+        if (err) throw err;
+        res.send(result);
+    });
+});
 
 /*
 * Representatives can send interview requests to developers regarding their results
