@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const express = require('express'); // imports the library express
+// const cors = require('cors');
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -11,7 +12,11 @@ const con = mysql.createConnection({
 
 const app = express(); // calls a function express in express server application here
 app.use(bodyParser.json());
-
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 app.get('/', function (req, res) {
     res.send('Hell World.');
 }); // initializes the server and the methods
@@ -151,6 +156,26 @@ app.post('/admin_signin', function(req, res){
         res.send(result);
     });
 });
+
+/*
+* Company representatives can list all quizzes and see results of developers taking
+the quiz.
+* */
+
+/*
+* Representatives can send interview requests to developers regarding their results
+on certain quizzes.
+* */
+
+/*
+* Each request has a deadline to monitor to accept and an associated job
+description.
+* */
+
+/*
+* Developers can accept or decline the request. Each request has a status of value
+among sent, accepted, declined.
+* */
 
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {
