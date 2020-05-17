@@ -173,16 +173,25 @@ app.get('/list_quizzes_candidates_results', function(req, res){
 * Representatives can send interview requests to developers regarding their results
 on certain quizzes.
 * */
-
-/*
-* Each request has a deadline to monitor to accept and an associated job
-description.
-* */
+app.post('/send_request_to_candidate', function(req, res){
+    const send_request_to_candidate = "INSERT INTO representative_sends_request_to_candidate VALUES(?, ?, ?, ?, ?);";
+    con.query(send_request_to_candidate,[req.body.candidateID, req.body.representativeID, req.body.content, req.body.status, req.body.deadline], function (err, result) {
+        if (err) throw err;
+        res.send();
+    });
+});
 
 /*
 * Developers can accept or decline the request. Each request has a status of value
 among sent, accepted, declined.
 * */
+app.post('/candidate_responds', function(req, res){
+    const candidate_respond = "UPDATE representative_sends_request_to_candidate SET status = ? WHERE candidateID = ? AND representativeID = ?;";
+    con.query(candidate_respond,[req.body.status, req.body.candidateID,req.body.representativeID], function (err, result) {
+        if (err) throw err;
+        res.send();
+    });
+});
 
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {

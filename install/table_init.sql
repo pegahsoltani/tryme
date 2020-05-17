@@ -72,6 +72,7 @@ CREATE TABLE representative_sends_request_to_candidate(
 	representativeID INT,
 	content VARCHAR(32),
 	status VARCHAR(16),
+	deadline DATETIME,
 	PRIMARY KEY (candidateID, representativeID),
 	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID),
 	FOREIGN KEY (representativeID) REFERENCES representative (representativeID)
