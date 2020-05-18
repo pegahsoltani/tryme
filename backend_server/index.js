@@ -60,16 +60,17 @@ app.post('/candidate_signup', function (req, res) { // post for server function
         [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
         function (err, result) {
                 if (err) throw err;
-                con.query(
-                    candidate_query_string,
-                    [req.body.userID, req.body.gpa, req.body.graduation_year, req.body.college_name, req.body.college_major, req.body.min_req_salary],
-                    function (err, result){
-                        if (err) throw err;
-                        res.send();
-                    }
-                );
-        // console.log("Result: " + result); // shows the message on terminal
-    }); // sending the quesries to the database
+                res.send(result);
+         console.log("Result: " + result); // shows the message on terminal
+    });
+    con.query(
+        candidate_query_string,
+        [req.body.userID, req.body.gpa, req.body.graduation_year, req.body.college_name, req.body.college_major, req.body.min_req_salary],
+        function (err, result){
+            if (err) throw err;
+            res.send(result);
+        }
+    ); // sending the queries to the database
 });
 
 // additional requirement, recommendatation
@@ -178,7 +179,7 @@ among sent, accepted, declined.
 * */
 
 // first create a user, then make it one of candidate or admin or representative
-app.listen(3000, function () {
+app.listen(5500, function () {
     console.log('Start tryme!');
     con.connect(function(err) {
         if (err) throw err;
