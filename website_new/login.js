@@ -1,5 +1,5 @@
-let un = "peg";
-let pw = "123";
+let un = "root";
+let pw = "1234ds4321aA!";
 function bclick() {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
