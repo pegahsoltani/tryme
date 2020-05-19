@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS tryme;
+CREATE DATABASE tryme;
+USE tryme;
+
 CREATE TABLE user(
 	userID INT PRIMARY KEY,
 	username VARCHAR(32) NOT NULL UNIQUE,
@@ -43,11 +47,17 @@ CREATE TABLE question(
 CREATE TABLE choice_options(
 	choiceID INT PRIMARY KEY,
 	content TEXT
+	questionID INT,
+	FOREIGN KEY (questionID) REFERENCES question (questionID);
 );
 CREATE TABLE quiz(
 	quizID INT PRIMARY KEY,
 	max_time_const INT,
-	quiz_name VARCHAR(32)
+	quiz_name VARCHAR(32),
+	quiz_subject VARCHAR(32),
+	number_of_questions INT,
+	adminID INT,
+	FOREIGN KEY (adminID) REFERENCES admin (adminID)
 );
 CREATE TABLE trial(
     candidateID INT,
@@ -110,9 +120,9 @@ CREATE TABLE quiz_contains_choice_options_and_questions(
 	quizID INT,
 	questionID INT,
 	choiceID INT,
-	is_correct BOOL,
 	question_order INT,
 	PRIMARY KEY (choiceID, questionID, quizID),
 	FOREIGN KEY (quizID) REFERENCES quiz (quizID),
 	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
+SOURCE /home/peg/WebstormProjects/tryme/install/insert_dummy_values.sql;

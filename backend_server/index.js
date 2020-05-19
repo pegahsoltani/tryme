@@ -192,6 +192,14 @@ app.post('/candidate_responds', function(req, res){
         res.send();
     });
 });
+/*
+He/She can specify the name of the quiz, its subject, time limit, number of
+questions and etc.
+For each quiz, questions have to be prepared along with their options and
+correct answer.
+Each question can belong to multiple subjects.
+*/
+
 
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {
