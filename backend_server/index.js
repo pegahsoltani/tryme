@@ -69,7 +69,7 @@ app.post('/candidate_signup', function (req, res) { // post for server function
                     }
                 );
         // console.log("Result: " + result); // shows the message on terminal
-    }); // sending the quesries to the database
+    }); // sending the queries to the database
 });
 
 // additional requirement, recommendatation
@@ -199,6 +199,26 @@ For each quiz, questions have to be prepared along with their options and
 correct answer.
 Each question can belong to multiple subjects.
 */
+app.post('/create_quiz', function(req, res){
+   // first creat a quiz
+    const create_quiz = "INSERT INTO quiz VALUES(?, ?, ?, ?, ?, ?);";
+    const create_question = "INSERT INTO question VALUES (?, ?, ?, ?, ?);";
+    const create_choice = "INSERT INTO choice_options VALUES (? , ?, ?);";
+    const quiz_contains_choice_options_and_questions = "INSERT INTO quiz_contains_choice_options_and_questions(?, ?, ?, ?);";
+        con.query(create_quiz,[req.body.quizID, req.body.max_time_const, req.body.quiz_name, req.body.quiz_subject, req.body.number_of_questions, req.body.adminID], function (err, result) {
+        if (err) throw err;
+        con.query(create_question, [req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
+            if (err) throw err;
+            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
+                if (err) throw err;
+                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
+                    if (err) throw err;
+                });
+            });
+        });
+        res.send();
+    });
+});
 
 
 // first create a user, then make it one of candidate or admin or representative

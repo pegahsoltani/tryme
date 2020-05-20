@@ -46,9 +46,9 @@ CREATE TABLE question(
 );
 CREATE TABLE choice_options(
 	choiceID INT PRIMARY KEY,
-	content TEXT
+	content TEXT,
 	questionID INT,
-	FOREIGN KEY (questionID) REFERENCES question (questionID);
+	FOREIGN KEY (questionID) REFERENCES question (questionID)
 );
 CREATE TABLE quiz(
 	quizID INT PRIMARY KEY,
