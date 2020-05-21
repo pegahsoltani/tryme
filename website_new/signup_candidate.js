@@ -1,6 +1,6 @@
 // var method = "POST";
 var url = "http://localhost:3000/candidate_signup";
-var username = "daswolfenblut30";
+var username = "daswolfenblut31";
 var password = "1234567xyz";
 var name = "DenizhaNN";
 var surname = "Soydass";
@@ -10,7 +10,7 @@ var graduation_year = 2021;
 var college_name = "ID Bilkent";
 var college_major = "CompSc";
 var min_req_salary = 6000;
-var userID = 30;
+var userID = 31;
 function bclick() {
     // var xmlHttp = new XMLHttpRequest();
     // xmlHttp.onreadystatechange = function() {
