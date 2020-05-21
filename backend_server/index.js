@@ -64,17 +64,13 @@ app.post('/candidate_signup', function (req, res) { // post for server function
                     candidate_query_string,
                     [req.body.userID, req.body.gpa, req.body.graduation_year, req.body.college_name, req.body.college_major, req.body.min_req_salary],
                     function (err, result){
-                        if (err){
-                            res.status(500).send(err);
-                            return;
-                        }
+                        if (err) throw err;
                         res.send();
                     }
                 );
         // console.log("Result: " + result); // shows the message on terminal
     }); // sending the queries to the database
 });
-
 
 // additional requirement, recommendatation
 app.post('/recom_list', function (req, res) { // post for server function
@@ -94,14 +90,14 @@ app.post('/recom_list', function (req, res) { // post for server function
 // sign up as representative
 app.post('/representative_signup', function (req, res) { // post for server function
     const user_query_string = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?);";
-    const representative_query_string = "INSERT INTO representative VALUES(?, ?);";
+    const candidate_query_string = "INSERT INTO representative VALUES(?, ?)";
     con.query(
         user_query_string,
         [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
         function (err, result) {
             if (err) throw err;
             con.query(
-                representative_query_string,
+                candidate_query_string,
                 [req.body.userID, req.body.position],
                 function (err, result){
                     if (err) {
@@ -165,21 +161,65 @@ app.post('/admin_signin', function(req, res){
 * Company representatives can list all quizzes and see results of developers taking
 the quiz.
 * */
+app.get('/list_quizzes_candidates_results', function(req, res){
+    const list_quizzes_candidates_results = "SELECT u.name , q.quiz_name , total_score, t.trialID FROM user u INNER JOIN candidate c INNER JOIN quiz q INNER JOIN trial t INNER JOIN (SELECT caq.candidateID , caq.trialID , sum(caq.answer = qn.correct_answer) as total_score FROM candidate_answers_question caq INNER JOIN question qn ON caq.questionID = qn.questionID GROUP BY caq.candidateID , caq.trialID) as total_score_table ON u.userID = c.candidateID AND t.quizID = q.quizID AND c.candidateID = t.candidateID AND total_score_table.trialID = t.trialID AND total_score_table.candidateID = c.candidateID;";
+    con.query(list_quizzes_candidates_results, function (err, result) {
+        if (err) throw err;
+        res.send(result);
+    });
+});
 
 /*
 * Representatives can send interview requests to developers regarding their results
 on certain quizzes.
 * */
-
-/*
-* Each request has a deadline to monitor to accept and an associated job
-description.
-* */
+app.post('/send_request_to_candidate', function(req, res){
+    const send_request_to_candidate = "INSERT INTO representative_sends_request_to_candidate VALUES(?, ?, ?, ?, ?);";
+    con.query(send_request_to_candidate,[req.body.candidateID, req.body.representativeID, req.body.content, req.body.status, req.body.deadline], function (err, result) {
+        if (err) throw err;
+        res.send();
+    });
+});
 
 /*
 * Developers can accept or decline the request. Each request has a status of value
 among sent, accepted, declined.
 * */
+app.post('/candidate_responds', function(req, res){
+    const candidate_respond = "UPDATE representative_sends_request_to_candidate SET status = ? WHERE candidateID = ? AND representativeID = ?;";
+    con.query(candidate_respond,[req.body.status, req.body.candidateID,req.body.representativeID], function (err, result) {
+        if (err) throw err;
+        res.send();
+    });
+});
+/*
+He/She can specify the name of the quiz, its subject, time limit, number of
+questions and etc.
+For each quiz, questions have to be prepared along with their options and
+correct answer.
+Each question can belong to multiple subjects.
+*/
+app.post('/create_quiz', function(req, res){
+   // first creat a quiz
+    const create_quiz = "INSERT INTO quiz VALUES(?, ?, ?, ?, ?, ?);";
+    const create_question = "INSERT INTO question VALUES (?, ?, ?, ?, ?);";
+    const create_choice = "INSERT INTO choice_options VALUES (? , ?, ?);";
+    const quiz_contains_choice_options_and_questions = "INSERT INTO quiz_contains_choice_options_and_questions(?, ?, ?, ?);";
+        con.query(create_quiz,[req.body.quizID, req.body.max_time_const, req.body.quiz_name, req.body.quiz_subject, req.body.number_of_questions, req.body.adminID], function (err, result) {
+        if (err) throw err;
+        con.query(create_question, [req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
+            if (err) throw err;
+            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
+                if (err) throw err;
+                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
+                    if (err) throw err;
+                });
+            });
+        });
+        res.send();
+    });
+});
+
 
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {
