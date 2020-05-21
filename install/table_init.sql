@@ -45,12 +45,12 @@ CREATE TABLE choice_options(
 	content TEXT
 );
 CREATE TABLE quiz(
-	quizID INT PRIMARY KEY,
+	quizID INT PRIMARY KEY AUTO_INCREMENT,
 	max_time_const INT,
 	quiz_name VARCHAR(32)
 );
 CREATE TABLE trial(
-	trialID INT PRIMARY KEY,
+	trialID INT PRIMARY KEY AUTO_INCREMENT,
 	start_date_time DATETIME,
 	end_date_time DATETIME,
 	answer VARCHAR(32),
@@ -58,7 +58,7 @@ CREATE TABLE trial(
 	FOREIGN KEY (quizID) REFERENCES quiz (quizID)
 );
 CREATE TABLE company_recommends_candidate(
-	companyID INT,
+	companyID INT AUTO_INCREMENT,
 	candidateID INT,
 	recom_letter BLOB,
 	PRIMARY KEY (companyID, candidateID),
@@ -66,7 +66,7 @@ CREATE TABLE company_recommends_candidate(
 	FOREIGN KEY (candidateID) REFERENCES candidate (candidateID)
 );
 CREATE TABLE representative_sends_request_to_candidate(
-	candidateID INT,
+	candidateID INT AUTO_INCREMENT,
 	representativeID INT,
 	content VARCHAR(32),
 	status VARCHAR(16),

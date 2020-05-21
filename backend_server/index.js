@@ -6,7 +6,7 @@ const express = require('express'); // imports the library express
 const con = mysql.createConnection({
     host: "localhost",
     user: "tryme",
-    password: "1234ds4321_aA!",
+    password: "12344321_aA!",
     database: "tryme"
 }); // connecting my database to the server
 
@@ -72,9 +72,9 @@ app.post('/candidate_signup', function (req, res) { // post for server function
     }); // sending the queries to the database
 });
 
-// additional requirement, recommendatation
+// additional requirement, recommendation
 app.post('/recom_list', function (req, res) { // post for server function
-    const recom_list_string = "SELECT c.company_name, r.recom_letter FROM company c INNER JOIN company_recommends_candidate r ON r.companyID = c.companyID WHERE r.candidateID = ?;";
+    const recom_list_string = "SELECT u.name, u.surname, c.company_name, r.recom_letter FROM company c INNER JOIN company_recommends_candidate r INNER JOIN user u ON r.companyID = c.companyID AND u.userID = r.candidateID WHERE r.candidateID = ?;";
     con.query(
         recom_list_string,
         [req.body.candidateID],
@@ -209,6 +209,28 @@ app.post('/create_quiz', function(req, res){
         if (err) throw err;
         con.query(create_question, [req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
             if (err) throw err;
+            // choice A
+            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
+                if (err) throw err;
+                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
+                    if (err) throw err;
+                });
+            });
+            // choice B
+            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
+                if (err) throw err;
+                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
+                    if (err) throw err;
+                });
+            });
+            // choice C
+            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
+                if (err) throw err;
+                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
+                    if (err) throw err;
+                });
+            });
+            // choice D
             con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
                 if (err) throw err;
                 con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
