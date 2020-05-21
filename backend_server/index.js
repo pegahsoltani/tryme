@@ -60,18 +60,21 @@ app.post('/candidate_signup', function (req, res) { // post for server function
         [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
         function (err, result) {
                 if (err) throw err;
-                res.send(result);
-         console.log("Result: " + result); // shows the message on terminal
-    });
-    con.query(
-        candidate_query_string,
-        [req.body.userID, req.body.gpa, req.body.graduation_year, req.body.college_name, req.body.college_major, req.body.min_req_salary],
-        function (err, result){
-            if (err) throw err;
-            res.send(result);
-        }
-    ); // sending the queries to the database
+                con.query(
+                    candidate_query_string,
+                    [req.body.userID, req.body.gpa, req.body.graduation_year, req.body.college_name, req.body.college_major, req.body.min_req_salary],
+                    function (err, result){
+                        if (err){
+                            res.status(500).send(err);
+                            return;
+                        }
+                        res.send();
+                    }
+                );
+        // console.log("Result: " + result); // shows the message on terminal
+    }); // sending the queries to the database
 });
+
 
 // additional requirement, recommendatation
 app.post('/recom_list', function (req, res) { // post for server function
@@ -91,14 +94,14 @@ app.post('/recom_list', function (req, res) { // post for server function
 // sign up as representative
 app.post('/representative_signup', function (req, res) { // post for server function
     const user_query_string = "INSERT INTO user VALUES(?, ?, ?, ?, ?, ?);";
-    const candidate_query_string = "INSERT INTO representative VALUES(?, ?)";
+    const representative_query_string = "INSERT INTO representative VALUES(?, ?);";
     con.query(
         user_query_string,
         [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
         function (err, result) {
             if (err) throw err;
             con.query(
-                candidate_query_string,
+                representative_query_string,
                 [req.body.userID, req.body.position],
                 function (err, result){
                     if (err) {
@@ -179,7 +182,7 @@ among sent, accepted, declined.
 * */
 
 // first create a user, then make it one of candidate or admin or representative
-app.listen(5500, function () {
+app.listen(3000, function () {
     console.log('Start tryme!');
     con.connect(function(err) {
         if (err) throw err;
