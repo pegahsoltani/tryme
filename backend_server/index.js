@@ -5,7 +5,7 @@ const express = require('express'); // imports the library express
 
 const con = mysql.createConnection({
     host: "localhost",
-    user: "root",
+    user: "tryme",
     password: "1234ds4321aA!",
     database: "tryme"
 }); // connecting my database to the server
