@@ -118,12 +118,18 @@ app.post('/admin_signup', function (req, res) { // post for server function
         user_query_string,
         [req.body.userID, req.body.username, req.body.password, req.body.name, req.body.surname, req.body.email],
         function (err, result) {
-            if (err) throw err;
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
             con.query(
                 candidate_query_string,
                 [req.body.userID],
                 function (err, result){
-                    if (err) throw err;
+                    if (err) {
+                        res.status(500).send(err);
+                        return;
+                    }
                     res.send();
                 }
             );
@@ -135,7 +141,10 @@ app.post('/admin_signup', function (req, res) { // post for server function
 app.post('/candidate_signin', function(req, res){
     const candidate_signin = "SELECT * FROM user u INNER JOIN candidate c ON u.userID = c.candidateID WHERE u.username = ? AND u.password = ?";
     con.query(candidate_signin,[req.body.username, req.body.password], function (err, result) {
-        if (err) throw err;
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
         res.send(result);
     });
 });
@@ -144,7 +153,10 @@ app.post('/candidate_signin', function(req, res){
 app.post('/representative_signin', function(req, res){
     const candidate_signin = "SELECT * FROM user u INNER JOIN representative r ON u.userID = r.representativeID WHERE u.username = ? AND u.password = ?";
     con.query(candidate_signin,[req.body.username, req.body.password], function (err, result) {
-        if (err) throw err;
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
         res.send(result);
     });
 });
@@ -152,7 +164,10 @@ app.post('/representative_signin', function(req, res){
 app.post('/admin_signin', function(req, res){
     const admin_signin = "SELECT * FROM user u INNER JOIN admin a ON u.userID = a.adminID WHERE u.username = ? AND u.password = ?";
     con.query(admin_signin,[req.body.username, req.body.password], function (err, result) {
-        if (err) throw err;
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
         res.send(result);
     });
 });
@@ -164,7 +179,10 @@ the quiz.
 app.get('/list_quizzes_candidates_results', function(req, res){
     const list_quizzes_candidates_results = "SELECT u.name , q.quiz_name , total_score, t.trialID FROM user u INNER JOIN candidate c INNER JOIN quiz q INNER JOIN trial t INNER JOIN (SELECT caq.candidateID , caq.trialID , sum(caq.answer = qn.correct_answer) as total_score FROM candidate_answers_question caq INNER JOIN question qn ON caq.questionID = qn.questionID GROUP BY caq.candidateID , caq.trialID) as total_score_table ON u.userID = c.candidateID AND t.quizID = q.quizID AND c.candidateID = t.candidateID AND total_score_table.trialID = t.trialID AND total_score_table.candidateID = c.candidateID;";
     con.query(list_quizzes_candidates_results, function (err, result) {
-        if (err) throw err;
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
         res.send(result);
     });
 });
@@ -176,7 +194,10 @@ on certain quizzes.
 app.post('/send_request_to_candidate', function(req, res){
     const send_request_to_candidate = "INSERT INTO representative_sends_request_to_candidate VALUES(?, ?, ?, ?, ?);";
     con.query(send_request_to_candidate,[req.body.candidateID, req.body.representativeID, req.body.content, req.body.status, req.body.deadline], function (err, result) {
-        if (err) throw err;
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
         res.send();
     });
 });
@@ -188,7 +209,10 @@ among sent, accepted, declined.
 app.post('/candidate_responds', function(req, res){
     const candidate_respond = "UPDATE representative_sends_request_to_candidate SET status = ? WHERE candidateID = ? AND representativeID = ?;";
     con.query(candidate_respond,[req.body.status, req.body.candidateID,req.body.representativeID], function (err, result) {
-        if (err) throw err;
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
         res.send();
     });
 });
@@ -206,43 +230,120 @@ app.post('/create_quiz', function(req, res){
     const create_choice = "INSERT INTO choice_options VALUES (? , ?, ?);";
     const quiz_contains_choice_options_and_questions = "INSERT INTO quiz_contains_choice_options_and_questions(?, ?, ?, ?);";
         con.query(create_quiz,[req.body.quizID, req.body.max_time_const, req.body.quiz_name, req.body.quiz_subject, req.body.number_of_questions, req.body.adminID], function (err, result) {
-        if (err) throw err;
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
         con.query(create_question, [req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
-            if (err) throw err;
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
             // choice A
             con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
-                if (err) throw err;
-                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
-                    if (err) throw err;
-                });
-            });
-            // choice B
-            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
-                if (err) throw err;
-                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
-                    if (err) throw err;
-                });
-            });
-            // choice C
-            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
-                if (err) throw err;
-                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
-                    if (err) throw err;
-                });
-            });
-            // choice D
-            con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
-                if (err) throw err;
-                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function () {
-                    if (err) throw err;
+                if (err) {
+                    res.status(500).send(err);
+                    return;
+                }
+                con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function (err, result) {
+                    if (err) {
+                        res.status(500).send(err);
+                        return;
+                    }
                 });
             });
         });
         res.send();
     });
 });
+// inserting quetions in the quiz
+app.post('/insert_question', function(req, res){
+    const create_question = "INSERT INTO question VALUES (?, ?, ?, ?, ?);";
+    const create_choice = "INSERT INTO choice_options VALUES (? , ?, ?);";
+    const insert_question = "INSERT INTO quiz_contains_choice_options_and_questions VALUES(?, ?, ?, ?);";
+    con.query(send_request_to_candidate,[req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        con.query(create_choice, [req.body.choiceID, req.body.content, req.body.questionID],function (err, result) {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+            con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function (err, result) {
+                if (err) {
+                    res.status(500).send(err);
+                    return;
+                }
+            });
+        });
+        res.send();
+    });
+});
 
+// listing methods
+app.get('/list_candidates', function (req, res) {
+    const query_string = "SELECT * FROM user u INNER JOIN candidate c ON u.userID = c.candidateID";
+    con.query(query_string, function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.send(result);
+        // console.log("Result: " + result); // shows the message on terminal
+    }); // sending the quesries to the database
+});
 
+app.get('/list_representatives', function (req, res) {
+    const query_string = "SELECT * FROM user u INNER JOIN representative r ON u.userID = r.representativeID";
+    con.query(query_string, function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.send(result);
+        // console.log("Result: " + result); // shows the message on terminal
+    }); // sending the quesries to the database
+});
+
+app.get('/list_admins', function (req, res) {
+    const query_string = "SELECT * FROM user u INNER JOIN admin a ON a.adminID = u.userID ";
+    con.query(query_string, function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.send(result);
+        // console.log("Result: " + result); // shows the message on terminal
+    }); // sending the quesries to the database
+});
+
+// list representatives with their recom letters and requests
+app.get('/candidate_detail', function (req, res) {
+    const query_string = "SELECT * FROM user u INNER JOIN candidate c INNER JOIN representative_sends_request_to_candidate r ON c.candidateID = u.userID AND r.candidateID = c.candidateID";
+    con.query(query_string, function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.send(result);
+        // console.log("Result: " + result); // shows the message on terminal
+    }); // sending the quesries to the database
+});
+
+// list all candidates with their quizzes and results
+app.get('/candidate_detail', function (req, res) {
+    const query_string = "SELECT * FROM user u INNER JOIN candidate c INNER JOIN representative_sends_request_to_candidate r ON c.candidateID = u.userID AND r.candidateID = c.candidateID";
+    con.query(query_string, function (err, result) {
+        if (err) {
+            res.status(500).send(err);
+            return;
+        }
+        res.send(result);
+        // console.log("Result: " + result); // shows the message on terminal
+    }); // sending the quesries to the database
+});
 // first create a user, then make it one of candidate or admin or representative
 app.listen(3000, function () {
     console.log('Start tryme!');
