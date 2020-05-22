@@ -11,6 +11,11 @@ const con = mysql.createConnection({
 }); // connecting my database to the server
 
 const app = express(); // calls a function express in express server application here
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 app.use(bodyParser.json());
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
@@ -261,7 +266,7 @@ app.post('/insert_question', function(req, res){
     const create_question = "INSERT INTO question VALUES (?, ?, ?, ?, ?);";
     const create_choice = "INSERT INTO choice_options VALUES (? , ?, ?);";
     const insert_question = "INSERT INTO quiz_contains_choice_options_and_questions VALUES(?, ?, ?, ?);";
-    con.query(send_request_to_candidate,[req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
+    con.query(create_question,[req.body.questionID, req.body.question_text, req.body.question_type, req.body.correct_answer, req.body.adminID], function (err, result) {
         if (err) {
             res.status(500).send(err);
             return;
@@ -271,7 +276,7 @@ app.post('/insert_question', function(req, res){
                 res.status(500).send(err);
                 return;
             }
-            con.query(quiz_contains_choice_options_and_questions, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function (err, result) {
+            con.query(insert_question, [req.body.quizID, req.body.questionID, req.body.choiceID, req.body.question_order], function (err, result) {
                 if (err) {
                     res.status(500).send(err);
                     return;
